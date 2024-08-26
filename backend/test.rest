@@ -1,0 +1,17 @@
+### Criar um novo usuário do tipo buyer
+POST http://localhost:3001/create-buyer
+Content-Type: application/json
+
+{
+  "email": "example@example.com",
+  "password": "securepassword",
+  "company_name": "Example Corp",
+  "cnpj": "12.345.678/0001-90",
+  "address": "123 Main St",
+  "phone1": "123-456-7890",
+  "phone2": "098-765-4321",
+  "responsible_name": "John Doe",
+  "responsible_cpf": "123.456.789-00",
+  "responsible_phone": "123-456-7890",
+  "responsible_position": "Manager"
+}

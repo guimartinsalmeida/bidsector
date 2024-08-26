@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:14
+    container_name: my_postgres_db
+    environment:
+      POSTGRES_USER: user123
+      POSTGRES_PASSWORD: password1234
+      POSTGRES_DB: db123
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: my_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+
+  app:
+    image: node:14
+    container_name: my_express_app
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+    command: npm start
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
