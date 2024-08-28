@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -15,7 +16,7 @@ const Signup = () => {
     responsible_phone: '',
     responsible_position: ''
   });
-  
+  const navigate = useNavigate()
   const [step, setStep] = useState(1);
 
   const handleChange = (e) => {
@@ -38,6 +39,7 @@ const Signup = () => {
     try {
       const response = await axios.post('http://localhost:3001/signup-buyer', formData);
       console.log('User created:', response.data);
+      navigate('/login')
     } catch (error) {
       console.error('Signup failed:', error);
     }
