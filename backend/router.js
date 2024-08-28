@@ -6,9 +6,9 @@ const authenticateJWT = require('./middleware/index')
 const router = express.Router();
 
 
-router.get('/protected-route', authenticateJWT, (req, res)=>{
-  res.status(200).json({message:'you have access to this route'})
-})
+router.get('/protected-route', authenticateJWT, (req, res) => {
+  res.status(200).json({ user: req.user, message: 'you have access to this route' });
+});
 
 router.post('/logout', (req, res) => {
   res.clearCookie('jwt');
@@ -53,7 +53,7 @@ router.post('/login', async (req, res) => {
       maxAge: 3600000 
     });
 
-    res.status(200).json({ message: 'Login successful', token });
+    res.status(200).json({ message: 'Login successful', token, user });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
