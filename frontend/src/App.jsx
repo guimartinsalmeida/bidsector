@@ -5,6 +5,7 @@ import Login from './Components/Login';
 import Signup from './Components/Signup';
 import ProtectedRoute from './Components/ProtectedRoute';
 import Home from './Components/Home'
+import CreateOrder from './Components/CreateOrder';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/create-order" element={<CreateOrder />} />
           <Route path="/protected-route" element={<ProtectedRoute />} />
         </Routes>
       </Router>
