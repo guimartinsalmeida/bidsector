@@ -16,6 +16,23 @@ router.post('/logout', (req, res) => {
 });
 
 
+router.get('/purchase-orders/:userID', authenticateJWT, async (req, res) => {
+  const { userID } = req.params;
+
+  try {
+    const result = await pool.query(
+      `SELECT * FROM purchase_orders WHERE buyer_id = $1`,
+      [userID]
+    );
+
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('Error fetching purchase orders:', error);
+    res.status(500).json({ error: 'Failed to fetch purchase orders' });
+  }
+});
+
+
 router.get('/all-buyers', async (req, res)=>{
     try {
       const getAllBuyers = await pool.query('SELECT * FROM public.user_profiles')
@@ -132,6 +149,47 @@ router.post('/signup-buyer', async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
+
+
+router.post('/purchase-orders', authenticateJWT, async (req, res) => {
+  const {
+    material_name,
+    quantity,
+    max_price,
+    freight_price,
+    delivery_address,
+    delivery_date,
+    pdf_url,
+    photo_url,
+    status
+  } = req.body;
+
+  // Obtém o userId do token JWT
+  const userId = req.user.id;
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO purchase_orders (
+        buyer_id, material_name, quantity, max_price, freight_price, 
+        delivery_address, delivery_date, pdf_url, photo_url, status
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
+      ) RETURNING *
+      `,
+      [
+        userId, material_name, quantity, max_price, freight_price, 
+        delivery_address, delivery_date, pdf_url, photo_url, status
+      ]
+    );
+
+    res.status(201).json({ message: 'Purchase order created successfully', order: result.rows[0] });
+  } catch (error) {
+    console.error('Error creating purchase order:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+
 
 
 module.exports = router;
