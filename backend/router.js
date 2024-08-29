@@ -155,6 +155,7 @@ router.post('/purchase-orders', authenticateJWT, async (req, res) => {
   const {
     material_name,
     quantity,
+    buyer_id,
     max_price,
     freight_price,
     delivery_address,
@@ -163,9 +164,6 @@ router.post('/purchase-orders', authenticateJWT, async (req, res) => {
     photo_url,
     status
   } = req.body;
-
-  // Obtém o userId do token JWT
-  const userId = req.user.id;
 
   try {
     const result = await pool.query(
@@ -177,7 +175,7 @@ router.post('/purchase-orders', authenticateJWT, async (req, res) => {
       ) RETURNING *
       `,
       [
-        userId, material_name, quantity, max_price, freight_price, 
+        buyer_id, material_name, quantity, max_price, freight_price, 
         delivery_address, delivery_date, pdf_url, photo_url, status
       ]
     );

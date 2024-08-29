@@ -15,7 +15,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/create-order" element={<CreateOrder />} />
+          <Route path="/create-order/:id" element={<CreateOrder />} />
           <Route path="/protected-route" element={<ProtectedRoute />} />
         </Routes>
       </Router>

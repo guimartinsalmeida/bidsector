@@ -1,9 +1,12 @@
-import { useState, useContext, useEffect } from 'react';
-import { AuthContext } from '../context/AuthContext'; // Importa o contexto de autenticação
+import { useState, useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const CreateOrder = () => {
   const { user } = useContext(AuthContext); 
-  
+  const {id} = useParams()
+  const navigate = useNavigate()
+  console.log(id)
   const [formData, setFormData] = useState({
     material_name: '',
     quantity: '',
@@ -13,7 +16,7 @@ const CreateOrder = () => {
     delivery_date: '',
     pdf_url: '',
     photo_url: '',
-    buyer_id: user ? user.userId : '',
+    buyer_id: id,
     status: 'ativa'
   });
 
@@ -37,6 +40,7 @@ const CreateOrder = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${user.token}`
         },
+        credentials: 'include',
         
         body: JSON.stringify(formData),
       });
@@ -44,6 +48,7 @@ const CreateOrder = () => {
       if (response.ok) {
         console.log(user.token)
         const data = await response.json();
+        navigate('/protected-route')
         console.log('Order created successfully', data);
       } else {
         alert('Error creating order');
