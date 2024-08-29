@@ -1,9 +1,9 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext'; // Importa o contexto de autenticação
 
 const CreateOrder = () => {
   const { user } = useContext(AuthContext); 
-  const buyerId = user.userId
+  
   const [formData, setFormData] = useState({
     material_name: '',
     quantity: '',
@@ -13,7 +13,7 @@ const CreateOrder = () => {
     delivery_date: '',
     pdf_url: '',
     photo_url: '',
-    buyer_id: buyerId,
+    buyer_id: user ? user.userId : '',
     status: 'ativa'
   });
 
@@ -37,10 +37,12 @@ const CreateOrder = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${user.token}`
         },
+        
         body: JSON.stringify(formData),
       });
 
       if (response.ok) {
+        console.log(user.token)
         const data = await response.json();
         console.log('Order created successfully', data);
       } else {
