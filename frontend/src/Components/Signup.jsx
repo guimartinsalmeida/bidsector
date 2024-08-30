@@ -2,7 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const Signup = () => {
+const Signup = () => {  
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -26,6 +26,17 @@ const Signup = () => {
       [e.target.name]: e.target.value
     });
   };
+
+
+  const isFormValid = formData.email.length > 0 &&
+                    formData.password.length > 0 &&
+                    formData.role.length > 0 &&
+                    formData.cnpj.length > 0 &&
+                    formData.address.length > 0 &&
+                    formData.company_name.length > 0 &&
+                    formData.phone1.length > 0;
+
+
 
   const handleNextStep = () => {
     setStep(step + 1);
@@ -68,7 +79,7 @@ const Signup = () => {
             <div className="block text-sm font-medium text-gray-700">
             <label required htmlFor="email" className="block text-sm font-medium text-gray-700">Perfil:</label>
               <select className="mt-1 block  px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"  name="role" onChange={handleChange} id="">
-              <option value="buyer">Selecione ... </option>
+              <option value="">Selecione ... </option>
               <option value="buyer">Comprador</option>
               <option value="supplier">Vendedor</option>
               </select>
@@ -155,8 +166,8 @@ const Signup = () => {
               <button 
                 type="button" 
                 onClick={handleNextStep}
-                disabled={ !(formData.email.length > 0 && formData.password.length > 0  && formData.role.length > 0  && formData.cnpj.length > 0  && formData.address.length > 0  && formData.company_name.length > 0 ) }
-                className="bg-indigo-600 text-white py-2 px-4 rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                disabled={!isFormValid}
+                className={`${!isFormValid ? 'bg-gray-600' : 'bg-indigo-600' } text-white py-2 px-4 rounded-md shadow  focus:outline-none focus:ring-2 focus:ring-offset-2`}
               >
                 Próximo
               </button>

@@ -11,32 +11,48 @@ const OrdersList = () => {
 
   useEffect(() => {
     const fetchOrders = async () => {
-      if (authLoading || !user || !user.userId) return;
-
+      if (authLoading || !user || !user.userId || !user.role) return;
       try {
-        const response = await fetch(`http://localhost:3001/purchase-orders/${user.userId}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${user.token}`,
-          },
-          credentials: 'include',
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch purchase orders');
-        }
-
-        const data = await response.json();
+        if(user.role === 'buyer'){
+          const response = await fetch(`http://localhost:3001/purchase-orders/${user.userId}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${user.token}`,
+            },
+            credentials: 'include',
+          });
+          if (!response.ok) {
+            throw new Error('Failed to fetch purchase orders');
+          }
+          const data = await response.json();
         setOrders(data);
-      } catch (err) {
+        }else if (user.role === 'supplier'){
+          const response = await fetch('http://localhost:3001/purchaseorders/', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${user.token}`,
+            },
+            credentials: 'include',
+          });
+          if (!response.ok) {
+            throw new Error('Failed to fetch purchase orders');
+          }
+          const data = await response.json();
+        setOrders(data);
+        console.log(orders)
+        }
+        }catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchOrders();
+      fetchOrders();
+    
+    
   }, [user, authLoading]);
 
   const handleLogout = (e) => {
