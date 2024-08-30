@@ -9,6 +9,7 @@ const Signup = () => {
     company_name: '',
     cnpj: '',
     address: '',
+    role:'',
     phone1: '',
     phone2: '',
     responsible_name: '',
@@ -36,6 +37,7 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('formData: ', formData)
     try {
       const response = await axios.post('http://localhost:3001/signup-buyer', formData);
       console.log('User created:', response.data);
@@ -47,8 +49,7 @@ const Signup = () => {
 
   return (
       <form onSubmit={handleSubmit} className="w-full max-w-lg bg-white p-8 rounded-lg shadow-lg space-y-8">
-        <h2 className="text-2xl font-bold text-center mb-6">Registro</h2>
-
+        
         {step === 1 && (
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Crie sua conta</h3>
@@ -60,8 +61,17 @@ const Signup = () => {
                 id="email" 
                 placeholder="Coloque seu melhor e-mail" 
                 onChange={handleChange}
+                required
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
+            </div>
+            <div className="block text-sm font-medium text-gray-700">
+            <label required htmlFor="email" className="block text-sm font-medium text-gray-700">Perfil:</label>
+              <select className="mt-1 block  px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"  name="role" onChange={handleChange} id="">
+              <option value="buyer">Selecione ... </option>
+              <option value="buyer">Comprador</option>
+              <option value="supplier">Vendedor</option>
+              </select>
             </div>
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">Senha:</label>
@@ -69,6 +79,7 @@ const Signup = () => {
                 type="password" 
                 name="password" 
                 id="password" 
+                required
                 placeholder="Coloque uma senha" 
                 onChange={handleChange}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -80,17 +91,20 @@ const Signup = () => {
                 type="text" 
                 name="company_name" 
                 id="company_name" 
+                required
                 placeholder="Nome da sua empresa" 
                 onChange={handleChange}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
             </div>
+            <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
             <div>
               <label htmlFor="cnpj" className="block text-sm font-medium text-gray-700">CNPJ:</label>
               <input 
                 type="text" 
                 name="cnpj" 
                 id="cnpj" 
+                required
                 placeholder="CNPJ" 
                 onChange={handleChange}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -102,11 +116,15 @@ const Signup = () => {
                 type="text" 
                 name="address" 
                 id="address" 
+                required
                 placeholder="Endereço da sua empresa" 
                 onChange={handleChange}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
             </div>
+            </div>
+            
+            
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="phone1" className="block text-sm font-medium text-gray-700">Telefone 1:</label>
@@ -115,6 +133,7 @@ const Signup = () => {
                   name="phone1" 
                   id="phone1" 
                   placeholder="Telefone" 
+                  required
                   onChange={handleChange}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 />
@@ -127,6 +146,7 @@ const Signup = () => {
                   id="phone2" 
                   placeholder="Telefone 2 (opcional)" 
                   onChange={handleChange}
+                  required
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 />
               </div>
@@ -134,7 +154,8 @@ const Signup = () => {
             <div className="flex justify-end">
               <button 
                 type="button" 
-                onClick={handleNextStep} 
+                onClick={handleNextStep}
+                disabled={ !(formData.email.length > 0 && formData.password.length > 0  && formData.role.length > 0  && formData.cnpj.length > 0  && formData.address.length > 0  && formData.company_name.length > 0 ) }
                 className="bg-indigo-600 text-white py-2 px-4 rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 Próximo
@@ -154,6 +175,7 @@ const Signup = () => {
                 id="responsible_name" 
                 placeholder="Nome" 
                 onChange={handleChange}
+                required
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
             </div>
@@ -164,6 +186,7 @@ const Signup = () => {
                 name="responsible_cpf" 
                 id="responsible_cpf" 
                 placeholder="CPF" 
+                required
                 onChange={handleChange}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
@@ -176,6 +199,7 @@ const Signup = () => {
                   name="responsible_phone" 
                   id="responsible_phone" 
                   placeholder="Telefone" 
+                  required
                   onChange={handleChange}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 />
@@ -186,7 +210,8 @@ const Signup = () => {
                   type="text" 
                   name="responsible_position" 
                   id="responsible_position" 
-                  placeholder="Cargo" 
+                  placeholder="Cargo"
+                  required
                   onChange={handleChange}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 />
