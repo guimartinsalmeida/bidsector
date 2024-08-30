@@ -28,7 +28,7 @@ router.get('/purchase-orders/:userID', authenticateJWT, async (req, res) => {
     res.status(200).json(result.rows);
   } catch (error) {
     console.error('Error fetching purchase orders:', error);
-    res.status(500).json({ error: 'Failed to fetch purchase orders' });
+    res.status(500).json({ error: 'Failed to fetch purchase orders filtered by your user identification' });
   }
 });
 
@@ -76,6 +76,18 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
+
+router.get('/purchaseorders', authenticateJWT, async (req, res)=>{
+  try {
+    const getAllPurchaseOrders = await pool.query('SELECT * FROM public.purchase_orders')
+    if(getAllPurchaseOrders.rows.length > 0){
+      res.status(200).json(getAllPurchaseOrders.rows)
+    }
+  } catch (error) {
+    console.log('Error fetching all purchase orders existing: ', error)
+    res.status(500).json({error: 'Failed to fecth all purchase orders'})
+  }
+})
 
 
 router.post('/delete-buyer', async (req, res) => {
