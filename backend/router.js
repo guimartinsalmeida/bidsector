@@ -110,7 +110,7 @@ router.post('/delete-buyer', async (req, res) => {
 
 
 router.post('/signup-buyer', async (req, res) => {
-  const { email, password, company_name, cnpj, address, phone1, phone2, responsible_name, responsible_cpf, responsible_phone, responsible_position } = req.body;
+  const { email, role, password, company_name, cnpj, address, phone1, phone2, responsible_name, responsible_cpf, responsible_phone, responsible_position } = req.body;
 
   console.log('Request body:', req.body);
 
@@ -125,7 +125,7 @@ router.post('/signup-buyer', async (req, res) => {
   
     const result = await pool.query(
       'INSERT INTO users (email, password, role) VALUES ($1, $2, $3) RETURNING id',
-      [email, passwordHashed, 'buyer']
+      [email, passwordHashed, role]
     );
 
     const userId = result.rows[0].id;
@@ -135,7 +135,7 @@ router.post('/signup-buyer', async (req, res) => {
       [userId, company_name, cnpj, address, phone1, phone2, responsible_name, responsible_cpf, responsible_phone, responsible_position]
     );
 
-    const token = jwt.sign({ userId, email, role: 'buyer' }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+    const token = jwt.sign({ userId, email, role }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
 
     res.cookie('jwt', token, {
       httpOnly: true,
