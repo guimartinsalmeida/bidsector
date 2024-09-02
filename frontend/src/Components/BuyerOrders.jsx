@@ -1,15 +1,41 @@
+import { FaBox, FaDollarSign, FaCalendarDay, FaMapMarkerAlt, FaTruck } from 'react-icons/fa';
+
 const BuyerOrders = ({ orders }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {orders.map(order => (
-        <div key={order.id} className="bg-white border border-gray-300 rounded-lg shadow-lg p-4">
-          <h2 className="text-xl font-semibold text-gray-700 mb-2">{order.material_name}</h2>
-          <p className="text-gray-600">Quantidade: <span className="font-medium">{order.quantity}</span></p>
-          <p className="text-gray-600">Preço pedido: <span className="font-medium">${order.max_price}</span></p>
-          <p className="text-gray-600">Status: <span className={`font-medium ${order.status === 'ativa' ? 'text-green-600' : order.status === 'Inativa'?'text-red-600' : 'text-yellow-600'}`}>{order.status}</span></p>
-          <p className="text-gray-600">Data de entrega: <span className="font-medium">{new Date(order.delivery_date).toLocaleDateString()}</span></p>
-          <p className="text-gray-600">Endereço para entrega: <span className="font-medium">{order.delivery_address}</span></p>
-          <p className="text-gray-600">Frete negociado: <span className="font-medium">${order.freight_price}</span></p>
+        <div key={order.id} className="bg-white border border-gray-200 rounded-lg shadow-lg p-6 transition-transform transform hover:scale-105">
+          <div className="flex items-center mb-4">
+            <FaBox className="text-indigo-500 text-3xl mr-3" />
+            <h2 className="text-2xl font-bold text-gray-800">{order.material_name || 'N/A'}</h2>
+          </div>
+          <div className="space-y-4">
+            <div className="flex items-center text-gray-600">
+              <FaBox className="text-gray-500 mr-2" />
+              <p className="font-medium">Quantidade: {order.quantity || 'N/A'}</p>
+            </div>
+            <div className="flex items-center text-gray-600">
+              <FaDollarSign className="text-gray-500 mr-2" />
+              <p className="font-medium">Preço pedido: ${order.max_price || 'N/A'}</p>
+            </div>
+            <div className="flex items-center text-gray-600">
+              <p className={`font-medium ${order.status === 'ativa' ? 'text-green-600' : order.status === 'Inativa' ? 'text-red-600' : 'text-yellow-600'}`}>
+                Status: {order.status || 'N/A'}
+              </p>
+            </div>
+            <div className="flex items-center text-gray-600">
+              <FaCalendarDay className="text-gray-500 mr-2" />
+              <p className="font-medium">Data de entrega: {order.delivery_date ? new Date(order.delivery_date).toLocaleDateString() : 'N/A'}</p>
+            </div>
+            <div className="flex items-center text-gray-600">
+              <FaMapMarkerAlt className="text-gray-500 mr-2" />
+              <p className="font-medium">Endereço para entrega: {order.delivery_address || 'N/A'}</p>
+            </div>
+            <div className="flex items-center text-gray-600">
+              <FaTruck className="text-gray-500 mr-2" />
+              <p className="font-medium">Frete negociado: ${order.freight_price || 'N/A'}</p>
+            </div>
+          </div>
         </div>
       ))}
     </div>

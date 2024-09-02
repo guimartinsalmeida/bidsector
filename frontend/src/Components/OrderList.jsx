@@ -3,6 +3,8 @@ import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import BuyerOrders from './BuyerOrders';
 import SupplierOrders from './SupplierOrders';
+import { FaPlus, FaSignOutAlt } from 'react-icons/fa';
+
 
 const OrdersList = () => {
   const { user, logout, loading: authLoading } = useContext(AuthContext);
@@ -65,23 +67,31 @@ const OrdersList = () => {
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
-      <div className='flex justify-between'>
-        {user.userId === 'buyer' ? (
-          <h1 className="text-2xl font-bold mb-6 text-gray-800">Suas Ordens de Compra</h1>
-        ): (<h1 className="text-2xl font-bold mb-6 text-gray-800">Ordens de Compras feitas</h1>)}
-        {user.role === 'buyer' ? (
-          <button onClick={() => navigate(`/create-order/${user.userId}`)} className="bg-green-500 text-white py-2 px-6 rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition ease-in-out duration-150">
-          Gerar Ordem de Compra
-        </button>
-        ): null}
-        
-        <button
-          onClick={handleLogout}
-          className="bg-[#dcdcdc] text-[#000000] py-2 px-4 rounded hover:bg-[#b3b3b3]"
-        >
-          Logout
-        </button>
-      </div>
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 mb-8">
+  <h1 className="text-2xl font-bold text-gray-800 mb-4 md:mb-0">
+    {user.userId === 'buyer' ? 'Suas Ordens de Compra' : 'Ordens de Compras Feitas'}
+  </h1>
+
+  <div className="flex gap-4">
+    {user.role === 'buyer' && (
+      <button
+        onClick={() => navigate(`/create-order/${user.userId}`)}
+        className="flex items-center bg-green-500 text-white py-2 px-4 md:py-2 md:px-6 rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition ease-in-out duration-150 text-sm md:text-base"
+      >
+        <FaPlus className="mr-2 text-lg md:text-xl" />
+        Gerar Ordem de Compra
+      </button>
+    )}
+
+    <button
+      onClick={handleLogout}
+      className="flex items-center bg-gray-300 text-gray-800 py-2 px-4 md:py-2 md:px-6 rounded-lg shadow-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75 transition ease-in-out duration-150 text-sm md:text-base"
+    >
+      <FaSignOutAlt className="mr-2 text-lg md:text-xl" />
+      Logout
+    </button>
+  </div>
+</div>
 
       {user.role === 'buyer' ? (
         <BuyerOrders orders={orders} />

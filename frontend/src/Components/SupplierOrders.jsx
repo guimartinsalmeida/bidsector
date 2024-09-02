@@ -1,4 +1,3 @@
-// SupplierOrders.js
 import { FaBox, FaDollarSign, FaCalendarDay, FaMapMarkerAlt, FaTruck, FaCogs } from 'react-icons/fa';
 
 const SupplierOrders = ({ orders }) => {
@@ -41,7 +40,6 @@ const SupplierOrders = ({ orders }) => {
               <p className="font-medium">Frete negociado: ${order.freight_price || 'N/A'}</p>
             </div>
 
-            {/* Exibindo especificações de material */}
             <div className="bg-gray-100 p-4 rounded-lg mt-4">
               <h3 className="text-lg font-semibold text-gray-800 mb-2">Especificações do Material:</h3>
               <div className="space-y-2">

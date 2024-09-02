@@ -114,7 +114,6 @@ const CreateOrder = () => {
         )}
       </div>
 
-      {/* Accordion Section 2: Descrição do Produto */}
       <div className="border-t border-gray-300 mt-4">
         <button
           type="button"
