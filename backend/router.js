@@ -174,7 +174,13 @@ router.post('/purchase-orders', authenticateJWT, async (req, res) => {
     delivery_date,
     pdf_url,
     photo_url,
-    status
+    status,
+    thickness, 
+    width, 
+    length, 
+    diameter, 
+    color, 
+    machined
   } = req.body;
 
   try {
@@ -191,6 +197,14 @@ router.post('/purchase-orders', authenticateJWT, async (req, res) => {
         delivery_address, delivery_date, pdf_url, photo_url, status
       ]
     );
+
+    const orderId = result.rows[0].id;
+
+    await pool.query(`INSERT INTO material_specifications(
+      order_id, thickness, width, length, diameter, color, machined
+    ) VALUES (
+    $1, $2, $3, $4, $5, $6, $7 
+    )`, [orderId, thickness, width, length, diameter, color, machined ])
 
     res.status(201).json({ message: 'Purchase order created successfully', order: result.rows[0] });
   } catch (error) {
