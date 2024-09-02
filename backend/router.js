@@ -77,17 +77,36 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.get('/purchaseorders', authenticateJWT, async (req, res)=>{
+router.get('/purchaseorders', authenticateJWT, async (req, res) => {
   try {
-    const getAllPurchaseOrders = await pool.query('SELECT * FROM public.purchase_orders')
-    if(getAllPurchaseOrders.rows.length > 0){
-      res.status(200).json(getAllPurchaseOrders.rows)
+    const getAllPurchaseOrders = await pool.query(`
+      SELECT
+        po.*, 
+        ms.thickness, 
+        ms.width, 
+        ms.length, 
+        ms.diameter, 
+        ms.color, 
+        ms.machined
+      FROM 
+        public.purchase_orders po
+      LEFT JOIN 
+        public.material_specifications ms
+      ON 
+        po.id = ms.order_id
+    `);
+
+    if (getAllPurchaseOrders.rows.length > 0) {
+      res.status(200).json(getAllPurchaseOrders.rows);
+    } else {
+      res.status(404).json({ message: 'No purchase orders found' });
     }
   } catch (error) {
-    console.log('Error fetching all purchase orders existing: ', error)
-    res.status(500).json({error: 'Failed to fecth all purchase orders'})
+    console.log('Error fetching all purchase orders and material specifications: ', error);
+    res.status(500).json({ error: 'Failed to fetch purchase orders with material specifications' });
   }
-})
+});
+
 
 
 router.post('/delete-buyer', async (req, res) => {
