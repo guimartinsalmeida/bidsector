@@ -77,23 +77,30 @@ router.post('/login', async (req, res) => {
   }
 });
 
+
+
 router.get('/purchaseorders', authenticateJWT, async (req, res) => {
   try {
     const getAllPurchaseOrders = await pool.query(`
       SELECT
-        po.*, 
-        ms.thickness, 
-        ms.width, 
-        ms.length, 
-        ms.diameter, 
-        ms.color, 
-        ms.machined
-      FROM 
-        public.purchase_orders po
-      LEFT JOIN 
-        public.material_specifications ms
-      ON 
-        po.id = ms.order_id
+  po.*, 
+  ms.thickness, 
+  ms.width, 
+  ms.length, 
+  ms.diameter, 
+  ms.color, 
+  ms.machined, 
+  up.* 
+FROM 
+  public.purchase_orders po
+LEFT JOIN 
+  public.material_specifications ms
+ON 
+  po.id = ms.order_id
+LEFT JOIN 
+  public.user_profiles up
+ON 
+  po.buyer_id = up.user_id
     `);
 
     if (getAllPurchaseOrders.rows.length > 0) {
