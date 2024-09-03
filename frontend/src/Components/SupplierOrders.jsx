@@ -1,19 +1,31 @@
-import { FaBox, FaDollarSign, FaCalendarDay, FaMapMarkerAlt, FaTruck, FaCogs } from 'react-icons/fa';
+import { FaBox, FaDollarSign, FaCalendarDay, FaMapMarkerAlt, FaTruck, FaCogs, FaUserTie, FaIdCard, FaPlus } from 'react-icons/fa';
 
 const SupplierOrders = ({ orders }) => {
+  console.log(orders)
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {orders.map(order => (
         <div key={order.id} className="bg-white border border-gray-200 rounded-lg shadow-lg p-6 transition-transform transform hover:scale-105">
-          <div className="flex items-center mb-4">
+          <div className="flex items-center justify-between mb-4">
+            <div className='flex flex-row'>
             <FaBox className="text-indigo-500 text-3xl mr-3" />
-            <h2 className="text-2xl font-bold text-gray-800">Ordem {order.id}</h2>
+            <h2 className="text-2xl font-bold text-gray-800"> {order.company_name}</h2>
+            </div>
+           <div>
+            <button
+            className="flex items-center bg-green-500 text-white py-2 px-4 md:py-2 md:px-6 rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition ease-in-out duration-150 text-sm md:text-base"
+            >
+              <FaPlus className="mr-2 text-lg md:text-xl" />
+            Aceitar</button>
+           </div>
+
           </div>
           <div className="space-y-4">
             <div className="flex items-center text-gray-600">
               <FaBox className="text-gray-500 mr-2" />
               <p className="font-medium">Material: {order.material_name || 'N/A'}</p>
             </div>
+            
             <div className="flex items-center text-gray-600">
               <FaBox className="text-gray-500 mr-2" />
               <p className="font-medium">Quantidade: {order.quantity || 'N/A'}</p>
@@ -26,6 +38,14 @@ const SupplierOrders = ({ orders }) => {
               <p className={`font-medium ${order.status === 'ativa' ? 'text-green-600' : order.status === 'Inativa' ? 'text-red-600' : 'text-yellow-600'}`}>
                 Status: {order.status || 'N/A'}
               </p>
+            </div>
+            <div className="flex items-center text-gray-600">
+              <FaUserTie className="text-gray-500 mr-2" />
+              <p className="font-medium">Responsavel: {order.responsible_name || 'N/A'} - {order.responsible_position}</p>
+            </div>
+            <div className="flex items-center text-gray-600">
+            <FaIdCard className="text-gray-500 mr-2"/>
+            <p className="font-medium">CNPJ: {order.cnpj || 'N/A'}</p>
             </div>
             <div className="flex items-center text-gray-600">
               <FaCalendarDay className="text-gray-500 mr-2" />
