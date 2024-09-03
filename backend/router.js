@@ -16,13 +16,12 @@ router.post('/logout', (req, res) => {
 });
 
 
-router.get('/purchase-orders/:userID', authenticateJWT, async (req, res) => {
-  const { userID } = req.params;
-
+router.get('/purchase-orders', authenticateJWT, async (req, res) => {
+  const { userId } = req.user;
   try {
     const result = await pool.query(
       `SELECT * FROM purchase_orders WHERE buyer_id = $1`,
-      [userID]
+      [userId]
     );
 
     res.status(200).json(result.rows);
