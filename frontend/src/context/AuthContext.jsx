@@ -1,4 +1,4 @@
-// src/context/AuthContext.js
+/* eslint-disable react/prop-types */
 import { createContext, useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';

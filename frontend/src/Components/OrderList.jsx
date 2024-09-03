@@ -19,7 +19,7 @@ const OrdersList = () => {
       try {
         let response;
         if (user.role === 'buyer') {
-          response = await fetch(`http://localhost:3001/purchase-orders/${user.userId}`, {
+          response = await fetch(`http://localhost:3001/purchase-orders`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',

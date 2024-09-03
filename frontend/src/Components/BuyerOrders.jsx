@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { FaBox, FaDollarSign, FaCalendarDay, FaMapMarkerAlt, FaTruck } from 'react-icons/fa';
 
 const BuyerOrders = ({ orders }) => {
