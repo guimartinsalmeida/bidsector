@@ -1,13 +1,44 @@
+require('dotenv').config();
 const express = require('express');
 const pool = require('./db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const authenticateJWT = require('./middleware/index')
 const router = express.Router();
+const { Resend } = require('resend');
 
 
 router.get('/protected-route', authenticateJWT, (req, res) => {
   res.status(200).json({ user: req.user, message: 'you have access to this route' });
+});
+
+const resend = new Resend('re_NwMwQo9C_4BMaKi4AomBZ4E8mnfS7L4eV');
+
+router.post('/send-email', async (req, res) => {
+  const { email, name, materialName, responsibleName, price } = req.body;
+
+  try {
+    await resend.emails.send({
+      from: 'Acme <onboarding@resend.dev>',
+      to: [email],
+      subject: 'Alguem Aceitou sua ordem de compra',
+      html: `<h1>Ordem de Compra Aceita!</h1>
+        <p>Olá ${name},</p>
+        <p>Estamos felizes em informar que sua ordem de compra foi aceita.</p>
+        <p><strong>Detalhes da Ordem:</strong></p>
+        <ul>
+          <li>Produto: ${materialName}</li>
+          <li>Quem Realizou a ordem de Compra: ${responsibleName}</li>
+          <li>Preço aceito: ${price}</li>
+        </ul>
+        <p>Obrigado por utilizar o BidSector!</p>`
+    });
+    res.status(200).send({ message: 'Email sent successfully' });
+
+    }catch (error) {
+      console.log(error)
+    res.status(500).json({ error: error.message });
+  }
 });
 
 router.post('/logout', (req, res) => {
@@ -82,24 +113,29 @@ router.get('/purchaseorders', authenticateJWT, async (req, res) => {
   try {
     const getAllPurchaseOrders = await pool.query(`
       SELECT
-  po.*, 
-  ms.thickness, 
-  ms.width, 
-  ms.length, 
-  ms.diameter, 
-  ms.color, 
-  ms.machined, 
-  up.* 
-FROM 
-  public.purchase_orders po
-LEFT JOIN 
-  public.material_specifications ms
-ON 
-  po.id = ms.order_id
-LEFT JOIN 
-  public.user_profiles up
-ON 
-  po.buyer_id = up.user_id
+        po.*, 
+        ms.thickness, 
+        ms.width, 
+        ms.length, 
+        ms.diameter, 
+        ms.color, 
+        ms.machined,
+		us.email,
+        up.* 
+      FROM 
+        public.purchase_orders po
+      LEFT JOIN 
+        public.material_specifications ms
+      ON 
+        po.id = ms.order_id
+      LEFT JOIN 
+        public.user_profiles up
+      ON 
+        po.buyer_id = up.user_id
+	  LEFT JOIN 
+	  public.users us
+	  ON
+	  up.user_id = us.id
     `);
 
     if (getAllPurchaseOrders.rows.length > 0) {
