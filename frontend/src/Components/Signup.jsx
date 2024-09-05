@@ -25,6 +25,7 @@ const Signup = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
+    console.log(formData)
   };
 
 
@@ -50,7 +51,11 @@ const Signup = () => {
     e.preventDefault();
     console.log('formData: ', formData)
     try {
-      const response = await axios.post('http://localhost:3001/signup-buyer', formData);
+      const response = await axios.post('http://localhost:3001/signup-buyer', formData, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
       console.log('User created:', response.data);
       navigate('/login')
     } catch (error) {

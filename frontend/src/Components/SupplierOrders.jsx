@@ -1,12 +1,38 @@
 /* eslint-disable react/prop-types */
 import { FaBox, FaDollarSign, FaCalendarDay, FaMapMarkerAlt, FaTruck, FaCogs, FaUserTie, FaIdCard, FaPlus } from 'react-icons/fa';
-
 const SupplierOrders = ({ orders }) => {
+  
+  const sendEmail = async (email, name, materialName, responsibleName, price) => {
+    try {
+      const response = await fetch('http://localhost:3001/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, name, materialName, responsibleName, price })
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to send email');
+      }
+  
+      const data = await response.json();
+      console.log('Email sent successfully', data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+  
+
+  const handleClick = async (email, name, materialName, responsibleName, price) =>{
+      sendEmail(email, name, materialName, responsibleName, price)
+  }
+
   console.log(orders)
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {orders.map(order => (
-        <div key={order.id} className="bg-white border border-gray-200 rounded-lg shadow-lg p-6 transition-transform transform hover:scale-105">
+      {orders.map((order, index) => (
+        <div key={index} className="bg-white border border-gray-200 rounded-lg shadow-lg p-6 transition-transform transform hover:scale-105">
           <div className="flex items-center justify-between mb-4">
             <div className='flex flex-row'>
             <FaBox className="text-indigo-500 text-3xl mr-3" />
@@ -15,6 +41,7 @@ const SupplierOrders = ({ orders }) => {
            <div>
             <button
             className="flex items-center bg-green-500 text-white py-2 px-4 md:py-2 md:px-6 rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition ease-in-out duration-150 text-sm md:text-base"
+            onClick={()=> handleClick(order.email, order.company_name, order.material_name, order.responsible_name, order.max_price)}
             >
               <FaPlus className="mr-2 text-lg md:text-xl" />
             Aceitar</button>
